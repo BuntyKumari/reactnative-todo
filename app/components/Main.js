@@ -8,21 +8,22 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Note from './Note';
-import {connect} from 'react-redux'
-import { addNewTask, deleteTask } from '../actions/index'
-
- class Main extends Component{
-     state = {
-         noteText:''
-     }
+export default class Main extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            noteArray:[],
+            noteText:'',
+        }
+    }
   render() {
-    //   console.log(this.props.noteArray, "aayush agrawal");
-      let notes = this.props.noteArray.map((val,key)=>{
-          return <Note keyval={key} val={val}
-            deleteMethod={ ()=> this.deleteNote(key) } arrays={this.props.noteArray} />
+    //   console.log(this.state.noteArray)
+      let notes = this.state.noteArray.map((val,key)=>{
+          console.log(key)
+          return <Note key={key} keyval={key} val={val}
+            deleteMethod={ ()=> this.deleteNote(key) } />
       });
     return(
-        // <Text>Jay aayush bunty sunil</Text>
       <View style={styles.container}>
          <View style={styles.header}>
             <Text style={styles.headerText}>NOTER</Text>        
@@ -34,7 +35,7 @@ import { addNewTask, deleteTask } from '../actions/index'
                
                 <TextInput
                  style={styles.textInput}
-                 onChangeText={(bunty)=>this.setState({noteText:bunty})}
+                 onChangeText={(noteText)=>this.setState({noteText})}
                  value={this.state.noteText}
                  placeholder='type' 
                  placeholderTextColor='white'
@@ -42,27 +43,31 @@ import { addNewTask, deleteTask } from '../actions/index'
                 </TextInput>
 
              </View>
-             <TouchableOpacity onPress={()=>{this.props.onAddTodo(this.state.noteText)}} style={styles.addButton}>
+             <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.addButton}>
                  <Text style={styles.addButtonText}>+</Text>
              </TouchableOpacity>
         
       </View>
     );
   }
-}
-const mapStateToProps = state => {
-    console.log(state, "bbbbbbbb");
-     return {
-       noteArray: state.todo.noteArray,
-       noteText: state.todo.noteText
-     }
-}
-const mapDispatchToProps = dispatch => {
-    // console.log(this.props.noteArray, "ppppppp");
-    return {
-        onAddTodo: (notetext) => dispatch(addNewTask(notetext)),
-        onDeleteTodo: () => dispatch(deleteTask(1)),
+  addNote(){
+    if(this.state.noteText){
+
+        var d = new Date();
+        this.state.noteArray.push({
+            'date': d.getFullYear() +
+            "/" + (d.getMonth()+1)+
+            "/" + d.getDate(),
+            'note':this.state.noteText
+        });
+        this.setState({ noteArray: this.state.noteArray})
+        this.setState({ noteText:''});
     }
+}
+deleteNote(key){
+    this.state.noteArray.splice(key, 1);
+    this.setState({ noteArray: this.state.noteArray })
+}
 }
 
 
@@ -119,7 +124,3 @@ const styles = StyleSheet.create({
         fontSize:24,
     },
 });
-
-export default connect (
-    mapStateToProps,mapDispatchToProps
-) (Main);

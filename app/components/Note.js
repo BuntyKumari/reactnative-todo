@@ -10,14 +10,11 @@ import {
 
 export default class Note extends Component{
   render() {
-    console.log(this.props.key, "key")
-    console.log(this.props.keyval, "keyval", this.props.val, "val")
-    console.log(this.props.noteArray)
     return(
         <View key={this.props.keyval} style={styles.note}>
 
-            <Text style={styles.noteText}>{this.props.arrays}</Text>
-            {/* <Text style={styles.noteText}>gfgfvgfvgf</Text> */}
+            <Text style={styles.noteText}>{this.props.val.date}</Text>
+            <Text style={styles.noteText}>{this.props.val.note}</Text>
             <TouchableOpacity onPress={this.props.deleteMethod} style={styles.noteDelete}>
                 <Text style={styles.noteDeleteText}>X</Text>
             </TouchableOpacity>
